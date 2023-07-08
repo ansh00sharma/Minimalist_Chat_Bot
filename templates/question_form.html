@@ -1,0 +1,36 @@
+{% extends "base.html" %}
+{% block title %}Display page{% endblock %}
+{% block content %}
+    <p>{{ paragraph }}</p>
+    <form action='/submit' method="POST" id="form">
+        <input type="text" class="form-control" name="question"/>
+        <input type="hidden" name="paragraph" value="{{ paragraph }}"/>
+        <input type="submit"/>
+    </form>
+    <div id="answer-section">
+        Answer:
+        <div class="container">
+            <p id="answer-text"></p>
+        </div>
+    </div>
+
+    <script>
+        $("#form").submit(function (e) {
+            e.preventDefault();
+
+            let form = $(this);
+            let actionUrl = form.attr("action");
+
+            $.ajax({
+                url: actionUrl,
+                method: "POST",
+                data: form.serialize(),
+                success: function (data) {
+                    $("#answer-text").text(data.response);
+                }, error: function () {
+                    console.log("error");
+                }
+            });
+        });
+    </script>
+{% endblock %}
